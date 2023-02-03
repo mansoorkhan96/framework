@@ -91,15 +91,11 @@ class MigrationCreator
     protected function ensureMigrationDoesntAlreadyExist($name, $migrationPath = null)
     {
         if (! empty($migrationPath)) {
-            $migrationFiles = $this->files->glob($migrationPath.'/*.php');
+            $migrationFiles = $this->files->glob($migrationPath . '/*' . $name . '.php');
 
-            foreach ($migrationFiles as $migrationFile) {
-                $this->files->requireOnce($migrationFile);
+            if (count($migrationFiles)) {
+                throw new InvalidArgumentException("A {$name} migration file already exists.");
             }
-        }
-
-        if (class_exists($className = $this->getClassName($name))) {
-            throw new InvalidArgumentException("A {$className} class already exists.");
         }
     }
 
